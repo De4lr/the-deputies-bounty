@@ -140,7 +140,7 @@ controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
 })
 sprites.onOverlap(SpriteKind.rpb, SpriteKind.silver, function (sprite, otherSprite) {
     music.powerUp.play()
-    info.changeScoreBy(2)
+    info.changeScoreBy(1)
     tiles.placeOnRandomTile(sliver, assets.tile`sany`)
 })
 sprites.onOverlap(SpriteKind.Projectile, SpriteKind.police, function (sprite, otherSprite) {
@@ -1473,7 +1473,9 @@ controller.down.onEvent(ControllerButtonEvent.Released, function () {
     down = false
 })
 sprites.onOverlap(SpriteKind.rpb, SpriteKind.police, function (sprite, otherSprite) {
-    info.changeLifeBy(-1)
+    timer.throttle("action", 500, function () {
+        info.changeLifeBy(-1)
+    })
 })
 controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     animation.runImageAnimation(
@@ -1547,7 +1549,7 @@ controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
 sprites.onOverlap(SpriteKind.rpb, SpriteKind.$, function (sprite, otherSprite) {
     music.magicWand.play()
     tiles.placeOnRandomTile(_3, assets.tile`myTile71`)
-    info.changeScoreBy(3)
+    info.changeScoreBy(5)
 })
 controller.right.onEvent(ControllerButtonEvent.Released, function () {
     right = false
@@ -1558,7 +1560,7 @@ controller.left.onEvent(ControllerButtonEvent.Released, function () {
 sprites.onOverlap(SpriteKind.rpb, SpriteKind.cents, function (sprite, otherSprite) {
     music.baDing.play()
     tiles.placeOnRandomTile(Coin, assets.tile`myTile87`)
-    info.changeScoreBy(1)
+    info.changeScoreBy(3)
 })
 controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     animation.runImageAnimation(
@@ -1814,7 +1816,7 @@ let Coin: Sprite = null
 let Police: Sprite = null
 let main_character: Sprite = null
 let _3: Sprite = null
-info.setLife(1)
+info.setLife(3)
 game.setDialogCursor(assets.image`weapon`)
 game.setDialogFrame(img`
     ..ffffffffffffffffffff..
@@ -1861,18 +1863,12 @@ tiles.placeOnRandomTile(Coin, assets.tile`myTile87`)
 tiles.placeOnRandomTile(sliver, assets.tile`sany`)
 Police.follow(main_character, 40)
 scene.cameraFollowSprite(main_character)
-game.onUpdateInterval(1, function () {
-    stop = up == false && (right == false && (left == false && down == false))
-})
 forever(function () {
     stop = up == false && (right == false && (left == false && down == false))
     if (stop == true) {
         animation.stopAnimation(animation.AnimationTypes.All, main_character)
-        animation.runImageAnimation(
-        main_character,
-        assets.animation`down`,
-        100,
-        false
-        )
     }
+})
+game.onUpdateInterval(1, function () {
+    stop = up == false && (right == false && (left == false && down == false))
 })
